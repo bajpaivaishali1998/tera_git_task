@@ -1,0 +1,52 @@
+name: Terraform Deploy
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+  #pull_request:
+    #branches: [ "master" ]
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  terraform:
+    name: terraform
+    runs-on: ubuntu-latest
+
+    env:
+          AWS_ACCESS_KEY_ID: ${{ Secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{ Secrets.AWS_SECRET_ACCESS_KEY }}
+          
+          AWS_DEFAULT_REGION: us-east-2
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+      - name: Terraform Init
+        id: init
+        run: |
+          rm -rf .terraform
+          terraform init -backend-config=config.remote
+      #search terraform backend command input in line no 35
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan 
+
+      - name: Terraform Apply
+        id: Apply
+        run: |
+          terraform apply -auto-approve 
+ 
+
+      # - name: Terraform destroy
+      #   id: destroy
+      #   run: terraform destroy -auto-approve 
+
