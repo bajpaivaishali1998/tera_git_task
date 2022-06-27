@@ -7,6 +7,12 @@ on:
     branches: [ "master" ]
   #pull_request:
     #branches: [ "master" ]
+  
+env:
+  BUCKET: vaishali-1998-bajpai
+  TFSTATE_FILE: sona.tfstate
+  DB_TABLE: vaishali_table
+
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -15,10 +21,13 @@ jobs:
     name: terraform
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ../
+
     env:
           AWS_ACCESS_KEY_ID: ${{ Secrets.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY: ${{ Secrets.AWS_SECRET_ACCESS_KEY }}
-          
+          AWS_SECRET_ACCESS_KEY: ${{ Secrets.AWS_SECRET_ACCESS_KEY }}          
           AWS_DEFAULT_REGION: us-east-2
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -32,13 +41,18 @@ jobs:
         id: init
         run: |
           rm -rf .terraform
-          terraform init -backend-config=config.remote
+          #terraform init -backend-config=config.remote
+          terraform init -reconfigure
+          -backend-config="bucket=$BUCKET"
+          -backend-config="key=$TFSTATE_FILE"
+          -backend-config="dynamodb_table=$DB_TABLE"
+
       #search terraform backend command input in line no 35
 
       - name: Terraform Plan
         id: plan
         run: |
-          terraform plan 
+          terraform plan -no-color
 
       - name: Terraform Apply
         id: Apply

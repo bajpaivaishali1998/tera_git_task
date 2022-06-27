@@ -32,7 +32,8 @@ jobs:
         id: init
         run: |
           rm -rf .terraform
-          terraform init -backend-config=config.remote
+          terraform init -reconfigure
+         #-backend-config="bucket=$BUCKET"
       #search terraform backend command input in line no 35
 
       - name: Terraform destroy
