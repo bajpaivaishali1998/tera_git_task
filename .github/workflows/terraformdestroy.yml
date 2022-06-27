@@ -18,7 +18,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./example
+        working-directory: ./Demo/example
 
     steps:
       - uses: actions/checkout@v3
