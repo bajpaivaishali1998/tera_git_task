@@ -17,7 +17,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ../
+        working-directory: ./example
 
     steps:
       - uses: actions/checkout@v3
@@ -28,7 +28,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-secret-session-token: ${{ secrets.AWS_SESSION_TOKEN }}add token in secrets
+          aws-secret-session-token: ${{ secrets.AWS_SESSION_TOKEN }} add token in secrets
           aws-region: us-east-1
       
       - name: terraforn-configure
