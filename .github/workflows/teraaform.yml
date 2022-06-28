@@ -3,7 +3,7 @@ name : 'Terraform apply.....'
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 env:
   BUCKET: vaishali-1998-bajpai
