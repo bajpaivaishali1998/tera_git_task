@@ -1,4 +1,4 @@
-name : 'Terraform Github Actions'
+name : 'terraform deploy'
 
 on:
   workflow_dispatch:
