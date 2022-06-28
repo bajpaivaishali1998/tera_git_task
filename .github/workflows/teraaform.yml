@@ -1,19 +1,22 @@
-name : 'terraform deploy'
+name : 'Terraform apply'
 
 on:
   workflow_dispatch:
   push:
-    branches: [ "master" ]
-  #pull_request:
-  #  branches: [ "main" ]
+    branches: [ "main" ]
+
 env:
   BUCKET: vaishali-1998-bajpai
   TFSTATE_FILE: sona.tfstate
   DB_TABLE: vaishali_table
 
+
 jobs:
-  terraform-run:
-    runs-on: ubuntu-latest
+  terraform:
+    name: Terraform
+    runs-on:  ubuntu-latest
+
+    
 
     defaults:
       run:
@@ -22,27 +25,32 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
-      
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-secret-session-token: ${{ secrets.AWS_SESSION_TOKEN }} add token in secrets
-          aws-region: us-east-1
-      
-      - name: terraforn-configure
-        id: init
-        run: 
-          terraform init -reconfigure
-          -backend-config="bucket=$BUCKET"
-          -backend-config="key=$TFSTATE_FILE"
-          -backend-config="dynamodb_table=$DB_TABLE"
+          aws-access-key-id:      ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token:      ${{ secrets.AWS_SESSION_TOKEN }} add token in secrets
 
-      - name: terraform-plan
+          aws-region: us-east-1      
+
+      - name: Terraform Init
+        id: init
+        run:
+          terraform init -reconfigure
+         -backend-config="bucket=$BUCKET" 
+         -backend-config="key=$TFSTATE_FILE" 
+         -backend-config="dynamodb_table=$DB_TABLE"
+
+
+      - name: Terraform Plan
         id: plan
         run: terraform plan -no-color
 
-      - name: terraform-apply
+      - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve 
+        run:  terraform apply -auto-approve
+
+
+      
