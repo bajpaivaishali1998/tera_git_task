@@ -34,7 +34,6 @@ jobs:
       - name: terraforn-configure
         id: init
         run: 
-          #cd ./scripts/Test_Module
           terraform init -reconfigure
           -backend-config="bucket=$BUCKET"
           -backend-config="key=$TFSTATE_FILE"
